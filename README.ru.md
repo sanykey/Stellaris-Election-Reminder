@@ -1,4 +1,4 @@
-# Stellaris mod: Star Seekers Notifications
+# Stellaris mod: Election Reminder
 
 [English](README.md) | **Русский**
 
