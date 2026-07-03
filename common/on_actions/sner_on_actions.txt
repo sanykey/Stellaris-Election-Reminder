@@ -1,0 +1,25 @@
+on_game_start_country = {
+	events = {
+		sner.2 # Initialize settings and establish the first election schedule.
+	}
+}
+
+on_post_government_changed = {
+	events = {
+		sner.2 # Reinitialize settings and establish a new election schedule.
+	}
+}
+
+on_election_started = {
+	events = {
+		sner.2 # Reset the schedule for the next election after the current one starts.
+	}
+}
+
+on_monthly_pulse_country = {
+	events = {
+		sner.3 # Check the election schedule and send any reminders that are due.
+	}
+}
+
+

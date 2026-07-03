@@ -1,0 +1,14 @@
+message_type = {
+	key = "SNER_ELECTION_REMINDER"
+	icon = "GFX_message_other_alert"
+	icon_frame = 1
+
+	name = "SNER_ELECTION_REMINDER_TITLE"
+	sound = "notification"
+	ping = "ping_notification_green"
+
+	hidden_in_message_settings = yes
+	category = government
+	default_notification = yes
+	default_toast = yes
+}

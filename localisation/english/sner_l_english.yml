@@ -1,0 +1,17 @@
+﻿l_english:
+ edict_sner_notification_settings: "Election Notification Settings"
+ edict_sner_notification_settings_desc: "Configure advance notifications for ruler elections."
+
+ sner.1.name: "Election Notifications"
+ sner.1.desc: "Show a notification before an election begins:"
+ sner.1.months_12_on: "12 months before: §GOn§!"
+ sner.1.months_12_off: "12 months before: §ROff§!"
+ sner.1.months_6_on: "6 months before: §GOn§!"
+ sner.1.months_6_off: "6 months before: §ROff§!"
+ sner.1.months_3_on: "3 months before: §GOn§!"
+ sner.1.months_3_off: "3 months before: §ROff§!"
+ sner.1.close: "Close"
+
+ SNER_ELECTION_REMINDER_TITLE: "Election Reminder"
+ SNER_MESSAGE_DEMOCRATIC: "A ruler election is expected to begin in §Y$MONTHS|0$ months§!. At the current monthly income, we can earn approximately £unity£$PROJECTED_UNITY|0$ Unity by then. Estimated total cost to support one candidate 1–5 times: £unity£$MIN_COST|0$–£unity£$MAX_COST|0$."
+ SNER_MESSAGE_OLIGARCHIC: "A ruler election is expected to begin in §Y$MONTHS|0$ months§!. At the current monthly income, we can earn approximately £unity£$PROJECTED_UNITY|0$ Unity by then. Estimated cost to elect a candidate: £unity£$COST|0$."

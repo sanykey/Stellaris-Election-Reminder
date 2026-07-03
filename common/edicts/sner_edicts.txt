@@ -1,0 +1,18 @@
+sner_notification_settings = {
+	length = 1
+	icon = "GFX_edict_type_policy"
+
+	potential = {
+		is_country_type = default
+		is_ai = no
+		NOT = { has_civic = civic_shadow_council }
+	}
+
+	effect = {
+		hidden_effect = {
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	ai_weight = { weight = 0 }
+}

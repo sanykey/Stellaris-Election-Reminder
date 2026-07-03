@@ -1,0 +1,151 @@
+namespace = sner
+
+# Notification settings menu
+country_event = {
+	id = sner.1
+	title = sner.1.name
+	desc = sner.1.desc
+	picture = GFX_evt_unity_symbol
+	is_triggered_only = yes
+
+	immediate = {
+		sner_initialize_settings = yes
+	}
+
+	option = {
+		name = sner.1.close
+	}
+
+	option = {
+		name = sner.1.months_12_on
+		trigger = { has_country_flag = sner_notify_12_enabled }
+		hidden_effect = {
+			remove_country_flag = sner_notify_12_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	option = {
+		name = sner.1.months_12_off
+		trigger = { NOT = { has_country_flag = sner_notify_12_enabled } }
+		hidden_effect = {
+			set_country_flag = sner_notify_12_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	option = {
+		name = sner.1.months_6_on
+		trigger = { has_country_flag = sner_notify_6_enabled }
+		hidden_effect = {
+			remove_country_flag = sner_notify_6_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	option = {
+		name = sner.1.months_6_off
+		trigger = { NOT = { has_country_flag = sner_notify_6_enabled } }
+		hidden_effect = {
+			set_country_flag = sner_notify_6_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	option = {
+		name = sner.1.months_3_on
+		trigger = { has_country_flag = sner_notify_3_enabled }
+		hidden_effect = {
+			remove_country_flag = sner_notify_3_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+
+	option = {
+		name = sner.1.months_3_off
+		trigger = { NOT = { has_country_flag = sner_notify_3_enabled } }
+		hidden_effect = {
+			set_country_flag = sner_notify_3_enabled
+			country_event = { id = sner.1 days = 0 }
+		}
+	}
+}
+
+# Establish a new election schedule from a reliable anchor.
+country_event = {
+	id = sner.2
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_country_type = default
+		is_ai = no
+	}
+
+	immediate = {
+		sner_initialize_settings = yes
+		# Each reliable anchor occurs one complete term before the next election.
+		sner_reset_election_schedule = yes
+	}
+}
+
+# Fire due reminders. This event never creates a schedule by itself, so a mod
+# added to an existing save remains dormant until one of the anchor on_actions.
+country_event = {
+	id = sner.3
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_country_type = default
+		is_ai = no
+		has_country_flag = sner_schedule_active
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				has_country_flag = sner_pending_12
+				NOT = { has_country_flag = sner_wait_12 }
+			}
+			remove_country_flag = sner_pending_12
+			if = {
+				limit = {
+					has_country_flag = sner_notify_12_enabled
+					NOT = { has_civic = civic_shadow_council }
+				}
+				sner_send_election_reminder = { MONTHS = 12 }
+			}
+		}
+
+		if = {
+			limit = {
+				has_country_flag = sner_pending_6
+				NOT = { has_country_flag = sner_wait_6 }
+			}
+			remove_country_flag = sner_pending_6
+			if = {
+				limit = {
+					has_country_flag = sner_notify_6_enabled
+					NOT = { has_civic = civic_shadow_council }
+				}
+				sner_send_election_reminder = { MONTHS = 6 }
+			}
+		}
+
+		if = {
+			limit = {
+				has_country_flag = sner_pending_3
+				NOT = { has_country_flag = sner_wait_3 }
+			}
+			remove_country_flag = sner_pending_3
+			if = {
+				limit = {
+					has_country_flag = sner_notify_3_enabled
+					NOT = { has_civic = civic_shadow_council }
+				}
+				sner_send_election_reminder = { MONTHS = 3 }
+			}
+		}
+	}
+}

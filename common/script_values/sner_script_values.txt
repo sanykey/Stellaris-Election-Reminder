@@ -1,0 +1,26 @@
+# Mirrors leader_election_elect_cost from common/game_rules/00_rules.txt,
+# but uses country scope so it can be shown before an election starts.
+sner_election_elect_cost = {
+	base = 1
+	add = modifier:country_election_cost_mult
+	mult = trigger:empire_size
+	round = yes
+	mult = 10
+}
+
+# Mirrors the first use of leader_election_support_cost.
+sner_election_support_cost_once = {
+	base = 1
+	add = modifier:country_election_cost_mult
+	mult = trigger:empire_size
+	mult = 4
+	divide = 10
+	round = yes
+	mult = 10
+}
+
+# Five consecutive uses cost 1 + 1.5 + 2 + 2.5 + 3 = 10 base uses.
+sner_election_support_cost_five = {
+	base = value:sner_election_support_cost_once
+	mult = 10
+}

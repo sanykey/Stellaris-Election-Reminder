@@ -1,0 +1,191 @@
+sner_initialize_settings = {
+	if = {
+		limit = { NOT = { has_country_flag = sner_settings_initialized } }
+		set_country_flag = sner_settings_initialized
+		set_country_flag = sner_notify_12_enabled
+		set_country_flag = sner_notify_6_enabled
+		set_country_flag = sner_notify_3_enabled
+	}
+}
+
+sner_clear_election_schedule = {
+	remove_country_flag = sner_schedule_active
+	remove_country_flag = sner_pending_12
+	remove_country_flag = sner_pending_6
+	remove_country_flag = sner_pending_3
+	remove_country_flag = sner_wait_12
+	remove_country_flag = sner_wait_6
+	remove_country_flag = sner_wait_3
+}
+
+sner_reset_election_schedule = {
+	sner_clear_election_schedule = yes
+
+	if = {
+		limit = {
+			NOT = { has_civic = civic_shadow_council }
+			OR = {
+				has_authority = auth_democratic
+				has_authority = auth_oligarchic
+				has_authority = auth_corporate
+			}
+		}
+
+		# Base election term in months.
+		if = {
+			limit = { has_authority = auth_democratic }
+			set_variable = { which = sner_term_months value = 120 }
+		}
+		else = {
+			set_variable = { which = sner_term_months value = 240 }
+		}
+
+		# Apply election-term modifiers from civics and advanced authorities.
+		export_modifier_to_variable = {
+			modifier = election_term_years_add
+			variable = sner_term_add
+		}
+		multiply_variable = { which = sner_term_add value = 12 }
+		change_variable = { which = sner_term_months value = sner_term_add }
+
+		export_modifier_to_variable = {
+			modifier = election_term_years_mult
+			variable = sner_term_mult
+		}
+		change_variable = { which = sner_term_mult value = 1 }
+		multiply_variable = { which = sner_term_months value = sner_term_mult }
+		round_variable = sner_term_months
+
+		set_variable = { which = sner_wait_months_12 value = sner_term_months }
+		change_variable = { which = sner_wait_months_12 value = -12 }
+		set_variable = { which = sner_wait_months_6 value = sner_term_months }
+		change_variable = { which = sner_wait_months_6 value = -6 }
+		set_variable = { which = sner_wait_months_3 value = sner_term_months }
+		change_variable = { which = sner_wait_months_3 value = -3 }
+
+		set_country_flag = sner_schedule_active
+		set_country_flag = sner_pending_12
+		set_country_flag = sner_pending_6
+		set_country_flag = sner_pending_3
+		set_timed_country_flag = {
+			flag = sner_wait_12
+			months = sner_wait_months_12
+		}
+		set_timed_country_flag = {
+			flag = sner_wait_6
+			months = sner_wait_months_6
+		}
+		set_timed_country_flag = {
+			flag = sner_wait_3
+			months = sner_wait_months_3
+		}
+
+		clear_variable = sner_term_months
+		clear_variable = sner_term_add
+		clear_variable = sner_term_mult
+		clear_variable = sner_wait_months_12
+		clear_variable = sner_wait_months_6
+		clear_variable = sner_wait_months_3
+	}
+}
+
+sner_send_election_reminder = {
+	set_variable = { which = sner_months_remaining value = $MONTHS$ }
+
+	# Project only income earned after this reminder, not the current stockpile.
+	export_resource_income_to_variable = {
+		resource = unity
+		variable = sner_projected_unity
+	}
+	if = {
+		limit = {
+			check_variable = { which = sner_projected_unity value < 0 }
+		}
+		set_variable = { which = sner_projected_unity value = 0 }
+	}
+	multiply_variable = { which = sner_projected_unity value = $MONTHS$ }
+
+	if = {
+		limit = { has_authority = auth_democratic }
+		set_variable = {
+			which = sner_support_cost_once
+			value = value:sner_election_support_cost_once
+		}
+		set_variable = {
+			which = sner_support_cost_five
+			value = value:sner_election_support_cost_five
+		}
+		create_message = {
+			type = SNER_ELECTION_REMINDER
+			localization = SNER_MESSAGE_DEMOCRATIC
+			days = 30
+			target = root
+			variable = {
+				type = variable
+				varname = sner_months_remaining
+				localization = MONTHS
+				scope = root
+			}
+			variable = {
+				type = variable
+				varname = sner_projected_unity
+				localization = PROJECTED_UNITY
+				scope = root
+			}
+			variable = {
+				type = variable
+				varname = sner_support_cost_once
+				localization = MIN_COST
+				scope = root
+			}
+			variable = {
+				type = variable
+				varname = sner_support_cost_five
+				localization = MAX_COST
+				scope = root
+			}
+		}
+		clear_variable = sner_support_cost_once
+		clear_variable = sner_support_cost_five
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_authority = auth_oligarchic
+				has_authority = auth_corporate
+			}
+		}
+		set_variable = {
+			which = sner_elect_cost
+			value = value:sner_election_elect_cost
+		}
+		create_message = {
+			type = SNER_ELECTION_REMINDER
+			localization = SNER_MESSAGE_OLIGARCHIC
+			days = 30
+			target = root
+			variable = {
+				type = variable
+				varname = sner_months_remaining
+				localization = MONTHS
+				scope = root
+			}
+			variable = {
+				type = variable
+				varname = sner_projected_unity
+				localization = PROJECTED_UNITY
+				scope = root
+			}
+			variable = {
+				type = variable
+				varname = sner_elect_cost
+				localization = COST
+				scope = root
+			}
+		}
+		clear_variable = sner_elect_cost
+	}
+
+	clear_variable = sner_months_remaining
+	clear_variable = sner_projected_unity
+}
